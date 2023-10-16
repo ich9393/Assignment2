@@ -1,0 +1,63 @@
+#include <stdio.h>
+#include <string.h>
+
+typedef struct Entry{
+    char* key;
+    float value;
+    struct Entry* next;
+}Entry;
+
+
+Entry* new_hash_map(int size){
+    
+    Entry* hashmap = calloc(sizeof(Entry), size);
+    
+    return hashmap;
+}
+
+int simple_hash(char* key, int hashmap_size){
+    int sum=0;
+    int i=0;
+
+    
+    while(key[i]!='\0'){
+        sum=sum+key[i];
+        i++;
+    }
+    
+    return sum % hashmap_size; //return hash value between 0 and array size.
+    
+}
+
+void add_entry_to_hashmap(Entry* hashmap, int array_size, char* key, int value){
+    
+    int hash=0;
+    hash= simple_hash(key, array_size);
+    hashmap[hash].key=key;
+    hashmap[hash].value=value;
+    hashmap[hash].next=NULL;
+    printf("hash is %d\n", hash);
+    
+}
+
+Entry* get_hashmap_entry(Entry* hashmap, int array_size, char* key_to_search){
+
+    
+    int hash=0;
+    hash=simple_hash(key_to_search, array_size);
+    printf("searched hash is %d\n", hash);
+    return &hashmap[hash];
+}
+
+void test_main(){
+    int size=10;
+    
+    Entry * hashmap=new_hash_map(size);
+    add_entry_to_hashmap(hashmap, size, "hello", 44);
+    printf("hashmap entry is %s, %f\n", hashmap[2].key, hashmap[2].value);
+    
+    add_entry_to_hashmap(hashmap, size, "goodbye", 45);
+    
+    Entry* result = get_hashmap_entry(hashmap, size, "goodbye");
+    printf("entry %p, key: %s, value %f \n", result, result->key, result->value);
+}
